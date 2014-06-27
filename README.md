@@ -15,7 +15,7 @@ In your home directory, add a text file, .clirarc
 ## Usage
 
 * Creating an issue
-`clira create <issue type> <issue title> <description> --in='<project key>'`
+`clira create <issue type> <issue title> <description> --project='<project key>'`
 
 * Listing projects
 `clira list-projects`
