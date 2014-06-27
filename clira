@@ -5,6 +5,7 @@ import os
 import toml
 import sys
 import requests
+import json
 from requests.auth import HTTPBasicAuth
 
 
@@ -29,6 +30,8 @@ class CliraConfig(object):
             print 'You need to create a .clirarc file in your home directory'
             sys.exit(1)
 
+def generate_issue_url(base_url, issue_key):
+    return '%s/browse/%s' % (base_url, issue_key)
 
 @click.group()
 @click.pass_context
@@ -51,8 +54,46 @@ def list_projects(clira_config):
     for project in response.json():
         print '%s: %s' % (project['key'], project['name'])
 
+
+@click.command()
+@click.pass_obj
+@click.argument('issue_type', nargs=1, required=True)
+@click.argument('summary', nargs=1, required=True)
+@click.argument('description', nargs=1, default='[BLANK]')
+@click.option('--project', default=None)
+def create_issue(clira_config, issue_type, summary, description, project):
+    issues_api_endpoint = clira_config.jira_base_url + '/rest/api/2/issue'
+    project_key = clira_config.config.get('default-project-key')
+    if project:
+        project_key = project
+    elif not project_key:
+        project_key = click.prompt('Enter a project key')
+
+    payload = {
+        'fields': {
+            'project': { 'key': project_key },
+            'summary': summary,
+            'issuetype': { 'name': issue_type },
+            'description': description,
+            'labels': ["clira"]
+        }
+    }
+    headers = headers = {'content-type': 'application/json'}
+    json_payload = json.dumps(payload)
+    response = requests.post(
+        issues_api_endpoint,
+        data=json_payload,
+        headers=headers,
+        auth=clira_config.auth)
+    issue_key = response.json()['key']
+
+    print 'Issue %s created. View it at %s' % (
+        issue_key,
+        generate_issue_url(clira_config.jira_base_url, issue_key))
+
 cli.add_command(show_config, name='show-config')
 cli.add_command(list_projects, name='list-projects')
+cli.add_command(create_issue, name='create')
 
 if __name__ == '__main__':
     cli()
