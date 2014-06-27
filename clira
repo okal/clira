@@ -4,28 +4,55 @@ import click
 import os
 import toml
 import sys
+import requests
+from requests.auth import HTTPBasicAuth
 
 
-config = False
-try:
-    clirarc_path = os.path.join(os.environ['HOME'], '.clirarc')
-    print clirarc_path
-    with open(clirarc_path) as clirarc:
-        config = toml.loads(clirarc.read())
-except IOError:
-    print 'You need to first create a .clirarc file in your home directory'
-    sys.exit(1)
+class CliraConfig(object):
+    def __init__(self):
+        try:
+            clirarc_path = os.path.join(os.environ['HOME'], '.clirarc')
+            with open(clirarc_path) as clirarc:
+                config = toml.loads(clirarc.read())
+                self.config = config
+
+                self.auth = HTTPBasicAuth(
+                    config['username'],
+                    config['password'])
+
+                self.jira_base_url = config['jira-instance-url']
+                self.default_project_key = config.get(
+                    'default-project-key',
+                    None)
+
+        except IOError:
+            print 'You need to create a .clirarc file in your home directory'
+            sys.exit(1)
+
 
 @click.group()
-def cli():
-    pass
+@click.pass_context
+def cli(ctx):
+    ctx.obj = CliraConfig()
+
 
 @click.command()
-def show_config():
-    for key, value in config.items():
+@click.pass_obj
+def show_config(clira_config):
+    for key, value in clira_config.config.items():
         print key, value
 
+
+@click.command()
+@click.pass_obj
+def list_projects(clira_config):
+    projects_api_endpoint = clira_config.jira_base_url + '/rest/api/2/project'
+    response = requests.get(projects_api_endpoint, auth=clira_config.auth)
+    for project in response.json():
+        print '%s: %s' % (project['key'], project['name'])
+
 cli.add_command(show_config, name='show-config')
+cli.add_command(list_projects, name='list-projects')
+
 if __name__ == '__main__':
     cli()
-
