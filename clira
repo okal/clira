@@ -111,8 +111,8 @@ def comment_on_issue(clira_config, issue, comment):
         data=json_payload,
         headers=headers,
         auth=clira_config.auth)
-    print response.status_code
-    print response.text
+    comment_id = response.json()['id']
+    print "%s/browse/%s?focusedCommentId=%s&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-%s" % (clira_config.jira_base_url, issue, comment_id, comment_id)
 
 cli.add_command(show_config, name='show-config')
 cli.add_command(list_projects, name='list-projects')
