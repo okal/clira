@@ -21,5 +21,5 @@ In your home directory, add a text file, .clirarc
 `clira list-projects`
 
 * Comment on an issue
-`clira comment '<comment text>' --on='<issue number>'`
+`clira comment '<issue number>' '<comment>'`
 
