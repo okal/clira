@@ -23,3 +23,4 @@ In your home directory, add a text file, .clirarc
 * Comment on an issue
 `clira comment '<issue number>' '<comment>'`
 
+For a more full-featured implementation, try https://github.com/alisaifee/jira-cli
