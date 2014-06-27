@@ -30,8 +30,10 @@ class CliraConfig(object):
             print 'You need to create a .clirarc file in your home directory'
             sys.exit(1)
 
+
 def generate_issue_url(base_url, issue_key):
     return '%s/browse/%s' % (base_url, issue_key)
+
 
 @click.group()
 @click.pass_context
@@ -71,9 +73,9 @@ def create_issue(clira_config, issue_type, summary, description, project):
 
     payload = {
         'fields': {
-            'project': { 'key': project_key },
+            'project': {'key': project_key},
             'summary': summary,
-            'issuetype': { 'name': issue_type },
+            'issuetype': {'name': issue_type},
             'description': description,
             'labels': ["clira"]
         }
