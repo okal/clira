@@ -44,7 +44,8 @@ def show_config(clira_config):
 def list_projects(clira_config):
     projects_api_endpoint = clira_config.jira_base_url + '/rest/api/2/project'
     response = requests.get(projects_api_endpoint, auth=clira_config.auth)
-    print response.json()
+    for project in response.json():
+        print '%s: %s' % (project['key'], project['name'])
 
 cli.add_command(show_config, name='show-config')
 cli.add_command(list_projects , name='list-projects')
