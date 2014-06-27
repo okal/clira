@@ -11,7 +11,6 @@ class CliraConfig(object):
     def __init__(self):
         try:
             clirarc_path = os.path.join(os.environ['HOME'], '.clirarc')
-            print clirarc_path
             with open(clirarc_path) as clirarc:
                 config = toml.loads(clirarc.read())
                 self.config = config
