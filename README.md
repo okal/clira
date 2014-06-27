@@ -1,4 +1,4 @@
-# CLIRA
+# clira
 
 clira is a command-line client for the JIRA API providing a quick and dirty way
 to file, comment on and view issue information.
