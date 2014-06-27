@@ -7,6 +7,7 @@ import sys
 import requests
 from requests.auth import HTTPBasicAuth
 
+
 class CliraConfig(object):
     def __init__(self):
         try:
@@ -20,10 +21,12 @@ class CliraConfig(object):
                     config['password'])
 
                 self.jira_base_url = config['jira-instance-url']
-                self.default_project_key = config.get('default-project-key', None)
+                self.default_project_key = config.get(
+                    'default-project-key',
+                    None)
 
         except IOError:
-            print 'You need to first create a .clirarc file in your home directory'
+            print 'You need to create a .clirarc file in your home directory'
             sys.exit(1)
 
 
@@ -32,11 +35,13 @@ class CliraConfig(object):
 def cli(ctx):
     ctx.obj = CliraConfig()
 
+
 @click.command()
 @click.pass_obj
 def show_config(clira_config):
     for key, value in clira_config.config.items():
         print key, value
+
 
 @click.command()
 @click.pass_obj
@@ -47,8 +52,7 @@ def list_projects(clira_config):
         print '%s: %s' % (project['key'], project['name'])
 
 cli.add_command(show_config, name='show-config')
-cli.add_command(list_projects , name='list-projects')
+cli.add_command(list_projects, name='list-projects')
 
 if __name__ == '__main__':
     cli()
-
