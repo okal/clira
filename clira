@@ -1,11 +1,31 @@
 #!/usr/bin/env python
 
 import click
+import os
+import toml
+import sys
 
-@click.group
+
+config = False
+try:
+    clirarc_path = os.path.join(os.environ['HOME'], '.clirarc')
+    print clirarc_path
+    with open(clirarc_path) as clirarc:
+        config = toml.loads(clirarc.read())
+except IOError:
+    print 'You need to first create a .clirarc file in your home directory'
+    sys.exit(1)
+
+@click.group()
 def cli():
     pass
 
+@click.command()
+def show_config():
+    for key, value in config.items():
+        print key, value
+
+cli.add_command(show_config, name='show-config')
 if __name__ == '__main__':
     cli()
 

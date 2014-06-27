@@ -7,10 +7,10 @@ to file, comment on and view issue information.
 
 In your home directory, add a text file, .clirarc
 
-	jira-instance-url: <url for your JIRA instance>
-    username: <username>
-	password: <password>
-	default-project-key: <default project key>
+    jira-instance-url = <url for your JIRA instance>
+    username = <username>
+    password = <password>
+    default-project-key = <default project key>
 
 ## Usage
 
