@@ -1,0 +1,4 @@
+username = "username"
+password = "password"
+jira-instance-url = "https://example.com"
+default-project-key = "PROJECT"
